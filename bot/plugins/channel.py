@@ -90,7 +90,7 @@ async def connect(bot: Bot, update):
     wait_msg = await update.reply_text("Please Wait Till I Add All Your Files From Channel To Db\n\n<i>This May Take 10 or 15 Mins Depending On Your No. Of Files In Channel.....</i>\n\nUntil Then Please Dont Sent Any Other Command Or This Operation May Be Intrupted....")
     
     try:
-        type_list = ["video", "audio", "document"]
+        type_list = ["video", "audio", "document" , "photo"]
         data = []
         skipCT = 0
         
@@ -145,6 +145,20 @@ async def connect(bot: Bot, update):
                         file_caption  = msgs.caption if msgs.caption else ""
                         file_size = msgs.document.file_size
                         file_type = "document"
+                     elif msgs.photo:
+                        try:
+                            file_id = await bot.get_messages(channel_id, message_ids=msgs.message_id)
+                        except FloodWait as e:
+                            asyncio.sleep(e.x)
+                            file_id = await bot.get_messages(channel_id, message_ids=msgs.message_id)
+                        except Exception as e:
+                            print(str(e))
+                            continue
+                        file_id = file_id.photo.file_id
+                        file_name = msgs.photo.caption[0:-4]
+                        file_caption  = msgs.caption if msgs.caption else ""
+                        file_size = msgs.photo.file_size
+                        file_type = "photo"      
                     
                     for i in ["_", "|", "-", "."]: # Work Around
                         try:
