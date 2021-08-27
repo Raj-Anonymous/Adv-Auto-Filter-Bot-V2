@@ -101,7 +101,12 @@ async def auto_filter(bot, update):
                     pass
                 else:
                     continue
-            
+         
+            elif file_type == "photo":
+                if allow_document:
+                    pass
+                else:
+                    continue
             if len(results) >= max_results:
                 break
             
